@@ -4,6 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'auth_page.dart';
 
+//route para o business_angel_home_page
+//route para o guest_home_page
+
+// miguel
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
