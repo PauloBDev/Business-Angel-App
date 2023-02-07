@@ -108,12 +108,13 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
           children: [
             if (pickedFile != null)
               Expanded(
-                  child: Container(
-                color: Colors.grey[900],
-                child: Center(
-                  child: Text(pickedFile!.name),
+                child: Container(
+                  color: Colors.grey[900],
+                  child: Center(
+                    child: Text(pickedFile!.name),
+                  ),
                 ),
-              )),
+              ),
             const SizedBox(
               height: 15,
             ),
