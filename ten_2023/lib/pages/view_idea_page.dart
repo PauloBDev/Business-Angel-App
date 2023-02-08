@@ -19,6 +19,7 @@ class ViewIdeiaPage extends StatefulWidget {
 }
 
 class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
+  List<String> comments = ["Teste1.", "gfdsa", "hgrfdsa"];
   TextEditingController? textController;
   final _unfocusNode = FocusNode();
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -39,6 +40,7 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       key: scaffoldKey,
       body: SafeArea(
         child: GestureDetector(
@@ -102,68 +104,69 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
                       ],
                     ),
                     Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                            width: 200,
-                            decoration: BoxDecoration(),
-                            child: TextFormField(
-                              controller: textController,
-                              autofocus: true,
-                              obscureText: false,
-                              decoration: const InputDecoration(
-                                labelText: 'Add  a comment..',
-
-                                // Set border for enabled state (default)
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0x00000000),
-                                    width: 1,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Container(
+                              width: 200,
+                              decoration: BoxDecoration(),
+                              child: TextFormField(
+                                controller: textController,
+                                autofocus: true,
+                                obscureText: false,
+                                decoration: const InputDecoration(
+                                  labelText: 'Add  a comment..',
+                                  // Set border for enabled state (default)
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(4.0),
+                                      topRight: Radius.circular(4.0),
+                                    ),
                                   ),
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(4.0),
-                                    topRight: Radius.circular(4.0),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(4.0),
+                                      topRight: Radius.circular(4.0),
+                                    ),
+                                  ),
+                                  errorBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(4.0),
+                                      topRight: Radius.circular(4.0),
+                                    ),
+                                  ),
+                                  focusedErrorBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(4.0),
+                                      topRight: Radius.circular(4.0),
+                                    ),
                                   ),
                                 ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0x00000000),
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(4.0),
-                                    topRight: Radius.circular(4.0),
-                                  ),
+                                style: const TextStyle(
+                                  fontFamily: 'Work Sans',
                                 ),
-                                errorBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0x00000000),
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(4.0),
-                                    topRight: Radius.circular(4.0),
-                                  ),
-                                ),
-                                focusedErrorBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0x00000000),
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(4.0),
-                                    topRight: Radius.circular(4.0),
-                                  ),
-                                ),
+                                textAlign: TextAlign.start,
                               ),
-                              style: const TextStyle(
-                                fontFamily: 'Work Sans',
-                              ),
-                              textAlign: TextAlign.start,
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     Column(
@@ -183,6 +186,21 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
                       ],
                     ),
                   ],
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: comments.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      leading: Image.asset(
+                        'lib/images/2366460-200.png',
+                        width: 50,
+                        height: 50,
+                      ),
+                      title: Text(comments[index]),
+                    );
+                  },
                 ),
               ),
             ],
