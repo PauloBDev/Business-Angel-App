@@ -204,7 +204,7 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: Colors.grey,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: DropdownButton<String>(
@@ -218,7 +218,7 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
                   ),
                   underline: Container(
                     height: 2,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                   onChanged: (String? value) {
                     setState(() {
@@ -231,6 +231,9 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
                       value: value,
                       child: Text(
                         value,
+                        style: const TextStyle(
+                          color: Colors.black,
+                        ),
                       ),
                     );
                   }).toList(),
