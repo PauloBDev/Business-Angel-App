@@ -1,22 +1,37 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ten_2023/pages/auth_page.dart';
 
-import 'auth_page.dart';
-
-//route para o business_angel_home_page
-//route para o guest_home_page
-
-// miguel
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   void signOut() {
     FirebaseAuth.instance.signOut();
   }
 
+  Future getInfo() async {
+    Map<String, dynamic>? dbData = {};
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then((value) {
+      dbData = value.data();
+      print(dbData);
+    });
+    return dbData;
+  }
+
   @override
   Widget build(BuildContext context) {
+    getInfo();
     return Scaffold(
       body: Column(
         children: [
@@ -25,26 +40,38 @@ class HomePage extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          height: 25,
+                FutureBuilder(
+                  future: getInfo(),
+                  builder: ((context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else {
+                      final data = snapshot.data;
+                      print('RETRIEVED DATA >>>> ${data}');
+                      return Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                height: 25,
+                              ),
+                              Text(
+                                'Currently logged in as ${FirebaseAuth.instance.currentUser!.email}\nUID:${FirebaseAuth.instance.currentUser!.uid}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                'Welcome ${data['username']} to the business angels app!',
+                                style: GoogleFonts.bebasNeue(fontSize: 32),
+                              ),
+                            ],
+                          ),
                         ),
-                        Text(
-                          'Currently logged in as ${FirebaseAuth.instance.currentUser!.email}\nUID:${FirebaseAuth.instance.currentUser!.uid}',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'Welcome to the official LPFP Management app',
-                          style: GoogleFonts.bebasNeue(fontSize: 32),
-                        ),
-                      ],
-                    ),
-                  ),
+                      );
+                    }
+                  }),
                 ),
                 Container(
                   padding: const EdgeInsets.all(3),
@@ -92,8 +119,6 @@ class HomePage extends StatelessWidget {
                             ),
                             height: 100,
                             width: 100,
-                            child: Image.asset(
-                                'lib/images/soccer_player_homepage.png'),
                           ),
                           Column(
                             children: [
@@ -134,8 +159,6 @@ class HomePage extends StatelessWidget {
                             ),
                             height: 100,
                             width: 100,
-                            child:
-                                Image.asset('lib/images/trophy_homepage.png'),
                           ),
                           Column(
                             children: [

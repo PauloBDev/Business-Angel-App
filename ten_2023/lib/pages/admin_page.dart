@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 import 'auth_page.dart';
 
-class GuestPage extends StatefulWidget {
-  const GuestPage({super.key});
+class AdminPage extends StatefulWidget {
+  const AdminPage({super.key});
 
   @override
-  State<GuestPage> createState() => _GuestPageState();
+  State<AdminPage> createState() => _AdminPageState();
 }
 
-class _GuestPageState extends State<GuestPage> {
+class _AdminPageState extends State<AdminPage> {
   void signOut() {
     FirebaseAuth.instance.signOut();
   }
@@ -21,7 +21,7 @@ class _GuestPageState extends State<GuestPage> {
     return Scaffold(
       body: SafeArea(
         child: Row(children: [
-          Text('GUEST PAGE'),
+          Text('ADMIN'),
           Container(
             padding: const EdgeInsets.all(3),
             decoration: BoxDecoration(
