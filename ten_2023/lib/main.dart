@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:ten_2023/pages/view_idea_page.dart';
 import 'pages/auth_page.dart';
 import 'pages/firebase_options.dart';
 
