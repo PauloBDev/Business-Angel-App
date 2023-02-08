@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AngelPage extends StatefulWidget {
-  const AngelPage({super.key});
+  var data;
+  AngelPage(this.data, {super.key});
 
   @override
   State<AngelPage> createState() => _AngelPageState();

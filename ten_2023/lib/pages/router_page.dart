@@ -38,11 +38,10 @@ class RouterPage extends StatelessWidget {
             final data = snapshot.data;
             print('RETRIEVED DATA >>>> ${data}');
             if (data['u_type'] == 'angel') {
-              return AngelPage();
+              return AngelPage(data);
             }
             if (data['u_type'] == 'guest') {
-              //return GuestPage();
-              return IdeaAddPage();
+              return GuestPage(data);
             }
             return AdminPage();
           }
