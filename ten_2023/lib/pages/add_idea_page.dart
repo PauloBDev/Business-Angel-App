@@ -7,8 +7,11 @@
 // paulo / joão
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+
+import 'auth_page.dart';
 
 class IdeaAddPage extends StatefulWidget {
   const IdeaAddPage({super.key});
@@ -23,6 +26,10 @@ const List<String> dropdownlist = <String>[
 ];
 
 class _IdeaAddPageState extends State<IdeaAddPage> {
+  void signOut() {
+    FirebaseAuth.instance.signOut();
+  }
+
   String dropdownvalue = dropdownlist.first;
   final List<TextEditingController> _controllers =
       List.generate(2, (i) => TextEditingController());
@@ -96,6 +103,32 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Add idea'),
+        actions: [
+          Container(
+            padding: const EdgeInsets.all(3),
+            decoration: BoxDecoration(
+                color: Colors.black87, borderRadius: BorderRadius.circular(30)),
+            child: IconButton(
+                onPressed: () {
+                  signOut();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: ((context) {
+                        return const AuthPage();
+                      }),
+                    ),
+                  );
+                },
+                icon: const Icon(
+                  Icons.logout,
+                  color: Colors.white,
+                )),
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30.0),
         child: Column(
