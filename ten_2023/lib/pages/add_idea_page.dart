@@ -6,14 +6,12 @@
 
 // paulo / joão
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class IdeaAddPage extends StatefulWidget {
   const IdeaAddPage({super.key});
-
   @override
   State<IdeaAddPage> createState() => _IdeaAddPageState();
 }
@@ -39,7 +37,6 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
   Future selectFile() async {
     final result = await FilePicker.platform.pickFiles();
     if (result == null) return;
-
     setState(() {
       pickedFile = result.files.first;
     });
@@ -48,8 +45,8 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
   Future uploadFile() async {
     final path = 'images/${pickedFile!.name}';
     final file = File(pickedFile!.path!);
-
     final ref = FirebaseStorage.instance.ref().child(path);
+
     setState(() {
       uploadTask = ref.putFile(file);
     });
@@ -68,8 +65,8 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
           if (snapshot.hasData) {
             final data = snapshot.data!;
             double progress = data.bytesTransferred / data.totalBytes;
-
             return SizedBox(
+              height: 50,
               child: Stack(
                 fit: StackFit.expand,
                 children: [
@@ -82,7 +79,7 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
                     child: Text(
                       "${(100 * progress).roundToDouble()}%",
                       style: const TextStyle(
-                        color: Colors.grey,
+                        color: Colors.black,
                       ),
                     ),
                   )
@@ -96,7 +93,6 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
           }
         },
       );
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,16 +101,16 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(
-              height: 30,
-            ),
             if (pickedFile != null)
               Expanded(
-                child: Center(
-                  child: Image.file(
-                    File(pickedFile!.path!),
-                    width: double.infinity,
-                    fit: BoxFit.cover,
+                child: SafeArea(
+                  child: Container(
+                    color: Colors.grey,
+                    child: Center(
+                      child: Text(
+                        pickedFile!.name,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -125,10 +121,10 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
               height: 50,
               width: 200,
               child: ElevatedButton(
-                onPressed: selectFile,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                 ),
+                onPressed: selectFile,
                 child: const Text(
                   "Selecione Ficheiro",
                   style: TextStyle(
@@ -138,16 +134,16 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
               ),
             ),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             SizedBox(
               height: 50,
               width: 200,
               child: ElevatedButton(
-                onPressed: uploadFile,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                 ),
+                onPressed: uploadFile,
                 child: const Text(
                   "Upload Ficheiro",
                   style: TextStyle(
@@ -157,12 +153,9 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
               ),
             ),
             const SizedBox(
-              height: 5,
+              height: 15,
             ),
             buildProgress(),
-            const SizedBox(
-              height: 10,
-            ),
             TextField(
               controller: _controllers[0],
               decoration: InputDecoration(
@@ -181,7 +174,7 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
               ),
             ),
             const SizedBox(
-              height: 5,
+              height: 15,
             ),
             TextField(
               controller: _controllers[1],
@@ -201,7 +194,7 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
               ),
             ),
             const SizedBox(
-              height: 5,
+              height: 15,
             ),
             Align(
               alignment: const Alignment(
@@ -211,7 +204,7 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
                 decoration: BoxDecoration(
-                  color: Colors.grey,
+                  color: Colors.black,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: DropdownButton<String>(
@@ -238,9 +231,6 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
                       value: value,
                       child: Text(
                         value,
-                        style: const TextStyle(
-                          color: Colors.black,
-                        ),
                       ),
                     );
                   }).toList(),
