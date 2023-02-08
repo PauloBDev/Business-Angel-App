@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
           email: _emailCtrlr.text, password: _passwordCtrlr.text);
 
       Navigator.pop(context);
-    } on FirebaseAuthException catch (error) {
+    } on FirebaseAuthException {
       Navigator.pop(context);
       showDialog(
         context: context,

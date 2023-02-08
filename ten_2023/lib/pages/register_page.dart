@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'login_screen.dart';
+import 'auth_page.dart';
 
 //ten_admin123
+//TODO: Add radio button to select either business angel or guest account
 class RegisterPage extends StatefulWidget {
   RegisterPage({super.key});
 
@@ -19,6 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _confirmPasswordCtrlr = TextEditingController();
   static final _validUsername = RegExp(r'^[a-zA-Z0-9]+$');
   bool obscurePassword = true;
+  late String errCode;
 
   @override
   void dispose() {
@@ -29,9 +32,26 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
-  Future signUp() async {
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailCtrlr.text.trim(), password: _passwordCtrlr.text.trim());
+  Future<bool> signUp() async {
+    User? currUser;
+    try {
+      currUser = (await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: _emailCtrlr.text.trim(),
+              password: _passwordCtrlr.text.trim()))
+          .user;
+    } on FirebaseAuthException catch (e) {
+      errCode = e.code;
+      return false;
+    }
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .set({
+      'email': _emailCtrlr.text.trim(),
+      'u_type': 'guest',
+      'username': _usernameCtrlr.text.trim()
+    });
+    return true;
   }
 
   @override
@@ -42,14 +62,17 @@ class _RegisterPageState extends State<RegisterPage> {
         elevation: 0,
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          onPressed: () => Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return LoginScreen();
-              },
-            ),
-          ),
+          onPressed: () {
+            FirebaseAuth.instance.signOut();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: ((context) {
+                  return const AuthPage();
+                }),
+              ),
+            );
+          },
           icon: const Icon(Icons.arrow_back),
         ),
       ),
@@ -207,12 +230,44 @@ class _RegisterPageState extends State<RegisterPage> {
                       height: 40,
                       width: 150,
                       child: ElevatedButton(
-                        onPressed: (() {
+                        onPressed: (() async {
+                          //Hide keyboard
+                          FocusScope.of(context).unfocus();
                           if (_formKey.currentState!.validate()) {
-                            signUp();
-                            //Add this new user to DB
-                            //UID as ID
-                            //Set state for good msg or error
+                            bool valid = await signUp();
+                            !valid
+                                ? ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Container(
+                                        padding: const EdgeInsets.all(12),
+                                        height: 90,
+                                        decoration: BoxDecoration(
+                                            color: Colors.red,
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        child: Text(errCode),
+                                      ),
+                                      behavior: SnackBarBehavior.floating,
+                                      backgroundColor: Colors.transparent,
+                                      elevation: 0,
+                                    ),
+                                  )
+                                : ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                    content: Container(
+                                      padding: const EdgeInsets.all(12),
+                                      height: 90,
+                                      decoration: BoxDecoration(
+                                          color: Colors.green,
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: const Text(
+                                          'Account created successfully!'),
+                                    ),
+                                    behavior: SnackBarBehavior.floating,
+                                    backgroundColor: Colors.transparent,
+                                    elevation: 0,
+                                  ));
                           }
                         }),
                         style: ButtonStyle(
