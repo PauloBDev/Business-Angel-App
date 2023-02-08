@@ -169,7 +169,7 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
                         ),
                         onPressed: selectFile,
                         child: const Text(
-                          "Selecione Ficheiro",
+                          "Selecione File",
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -181,42 +181,13 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
                 const SizedBox(
                   height: 20,
                 ),
-                Row(
-                  children: [
-                    Center(
-                      child: SizedBox(
-                        height: 50,
-                        width: 200,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                          ),
-                          onPressed: uploadFile,
-                          child: const Text(
-                            "Upload Ficheiro",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    buildProgress(),
-                  ],
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
                 const SizedBox(
                   height: 15,
                 ),
                 TextField(
                   controller: _controllers[0],
                   decoration: InputDecoration(
-                    labelText: 'Titulo',
+                    labelText: 'Title',
                     filled: true,
                     fillColor: Colors.white,
                     border: const OutlineInputBorder(),
@@ -236,7 +207,7 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
                 TextField(
                   controller: _controllers[1],
                   decoration: InputDecoration(
-                    labelText: 'Descrição',
+                    labelText: 'Description',
                     filled: true,
                     fillColor: Colors.white,
                     border: const OutlineInputBorder(),
@@ -297,159 +268,39 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
                     ),
                   ),
                 ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  children: [
+                    Center(
+                      child: SizedBox(
+                        height: 50,
+                        width: 200,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                pickedFile == null ? Colors.grey : Colors.black,
+                          ),
+                          onPressed: pickedFile == null ? () {} : uploadFile,
+                          child: const Text(
+                            "Upload File",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    buildProgress(),
+                  ],
+                ),
               ],
             ),
           ),
-        )
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 30.0),
-        //   child: Column(
-        //     mainAxisAlignment: MainAxisAlignment.center,
-        //     children: [
-        //       if (pickedFile != null)
-        //         Expanded(
-        //           child: SafeArea(
-        //             child: Center(
-        //               child: Image.file(
-        //                 File(pickedFile!.path!),
-        //                 width: double.infinity,
-        //                 fit: BoxFit.cover,
-        //               ),
-        //             ),
-        //           ),
-        //         ),
-        //       const SizedBox(
-        //         height: 15,
-        //       ),
-        //       SizedBox(
-        //         height: 50,
-        //         width: 200,
-        //         child: ElevatedButton(
-        //           style: ElevatedButton.styleFrom(
-        //             backgroundColor: Colors.black,
-        //           ),
-        //           onPressed: selectFile,
-        //           child: const Text(
-        //             "Selecione Ficheiro",
-        //             style: TextStyle(
-        //               color: Colors.white,
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //       const SizedBox(
-        //         height: 20,
-        //       ),
-        //       SizedBox(
-        //         height: 50,
-        //         width: 200,
-        //         child: ElevatedButton(
-        //           style: ElevatedButton.styleFrom(
-        //             backgroundColor: Colors.black,
-        //           ),
-        //           onPressed: uploadFile,
-        //           child: const Text(
-        //             "Upload Ficheiro",
-        //             style: TextStyle(
-        //               color: Colors.white,
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //       const SizedBox(
-        //         height: 15,
-        //       ),
-        //       buildProgress(),
-        //       const SizedBox(
-        //         height: 15,
-        //       ),
-        //       TextField(
-        //         controller: _controllers[0],
-        //         decoration: InputDecoration(
-        //           labelText: 'Titulo',
-        //           filled: true,
-        //           fillColor: Colors.white,
-        //           border: const OutlineInputBorder(),
-        //           suffix: IconButton(
-        //             onPressed: () {
-        //               _controllers[0].clear();
-        //             },
-        //             icon: const Icon(
-        //               Icons.clear,
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //       const SizedBox(
-        //         height: 15,
-        //       ),
-        //       TextField(
-        //         controller: _controllers[1],
-        //         decoration: InputDecoration(
-        //           labelText: 'Descrição',
-        //           filled: true,
-        //           fillColor: Colors.white,
-        //           border: const OutlineInputBorder(),
-        //           suffix: IconButton(
-        //             onPressed: () {
-        //               _controllers[1].clear();
-        //             },
-        //             icon: const Icon(
-        //               Icons.clear,
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //       const SizedBox(
-        //         height: 15,
-        //       ),
-        //       Align(
-        //         alignment: const Alignment(
-        //           -1,
-        //           1,
-        //         ),
-        //         child: Container(
-        //           padding: const EdgeInsets.symmetric(horizontal: 30.0),
-        //           decoration: BoxDecoration(
-        //             color: Colors.grey,
-        //             borderRadius: BorderRadius.circular(8),
-        //           ),
-        //           child: DropdownButton<String>(
-        //             value: dropdownvalue,
-        //             style: const TextStyle(
-        //               color: Colors.white,
-        //             ),
-        //             icon: const Icon(
-        //               Icons.expand_more,
-        //               color: Colors.blue,
-        //             ),
-        //             underline: Container(
-        //               height: 2,
-        //               color: Colors.black,
-        //             ),
-        //             onChanged: (String? value) {
-        //               setState(() {
-        //                 dropdownvalue = value!;
-        //               });
-        //             },
-        //             items: dropdownlist
-        //                 .map<DropdownMenuItem<String>>((String value) {
-        //               return DropdownMenuItem<String>(
-        //                 value: value,
-        //                 child: Text(
-        //                   value,
-        //                   style: const TextStyle(
-        //                     color: Colors.black,
-        //                   ),
-        //                 ),
-        //               );
-        //             }).toList(),
-        //           ),
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
-        );
+        ));
   }
 }
