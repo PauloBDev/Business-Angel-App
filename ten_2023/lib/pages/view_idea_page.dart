@@ -9,7 +9,6 @@
 // Rocha / telmo
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ViewIdeiaPage extends StatefulWidget {
   const ViewIdeiaPage({Key? key}) : super(key: key);
