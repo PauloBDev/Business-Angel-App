@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'auth_page.dart';
 
 //ten_admin123
-//TODO: Add radio button to select either business angel or guest account
 class RegisterPage extends StatefulWidget {
   RegisterPage({super.key});
 
@@ -20,6 +19,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _passwordCtrlr = TextEditingController();
   final _confirmPasswordCtrlr = TextEditingController();
   static final _validUsername = RegExp(r'^[a-zA-Z0-9]+$');
+  String? _userType = 'angel';
   bool obscurePassword = true;
   late String errCode;
 
@@ -48,7 +48,7 @@ class _RegisterPageState extends State<RegisterPage> {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .set({
       'email': _emailCtrlr.text.trim(),
-      'u_type': 'guest',
+      'u_type': _userType,
       'username': _usernameCtrlr.text.trim()
     });
     return true;
@@ -97,6 +97,34 @@ class _RegisterPageState extends State<RegisterPage> {
                   textAlign: TextAlign.center,
                   style: GoogleFonts.bebasNeue(fontSize: 26),
                 ),
+              ),
+              Column(
+                children: [
+                  ListTile(
+                    title: const Text('Business Angel'),
+                    leading: Radio<String>(
+                      groupValue: _userType,
+                      value: 'angel',
+                      onChanged: (value) {
+                        setState(() {
+                          _userType = value;
+                        });
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('Guest'),
+                    leading: Radio<String>(
+                      groupValue: _userType,
+                      value: 'guest',
+                      onChanged: (value) {
+                        setState(() {
+                          _userType = value;
+                        });
+                      },
+                    ),
+                  ),
+                ],
               ),
               Form(
                 key: _formKey,
