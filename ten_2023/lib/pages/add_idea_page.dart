@@ -11,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
+import 'dart:typed_data';
 import 'auth_page.dart';
 
 class IdeaAddPage extends StatefulWidget {
@@ -74,10 +75,12 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
             double progress = data.bytesTransferred / data.totalBytes;
             return SizedBox(
               height: 50,
+              width: 50,
               child: Stack(
                 fit: StackFit.expand,
                 children: [
                   CircularProgressIndicator(
+                    strokeWidth: 20,
                     value: progress,
                     backgroundColor: Colors.grey,
                     color: Colors.black,
@@ -87,6 +90,7 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
                       "${(100 * progress).roundToDouble()}%",
                       style: const TextStyle(
                         color: Colors.black,
+                        backgroundColor: Colors.white,
                       ),
                     ),
                   )
@@ -154,45 +158,58 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
                 const SizedBox(
                   height: 15,
                 ),
-                SizedBox(
-                  height: 50,
-                  width: 200,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                    ),
-                    onPressed: selectFile,
-                    child: const Text(
-                      "Selecione Ficheiro",
-                      style: TextStyle(
-                        color: Colors.white,
+                Row(
+                  children: [
+                    SizedBox(
+                      height: 50,
+                      width: 200,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                        ),
+                        onPressed: selectFile,
+                        child: const Text(
+                          "Selecione Ficheiro",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                SizedBox(
-                  height: 50,
-                  width: 200,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                    ),
-                    onPressed: uploadFile,
-                    child: const Text(
-                      "Upload Ficheiro",
-                      style: TextStyle(
-                        color: Colors.white,
+                Row(
+                  children: [
+                    Center(
+                      child: SizedBox(
+                        height: 50,
+                        width: 200,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                          ),
+                          onPressed: uploadFile,
+                          child: const Text(
+                            "Upload Ficheiro",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    buildProgress(),
+                  ],
                 ),
                 const SizedBox(
                   height: 15,
                 ),
-                buildProgress(),
                 const SizedBox(
                   height: 15,
                 ),
