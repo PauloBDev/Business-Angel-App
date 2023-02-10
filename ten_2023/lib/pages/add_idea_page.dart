@@ -10,6 +10,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'ideas.dart';
 
 import 'dart:typed_data';
 import 'auth_page.dart';
@@ -27,6 +28,7 @@ const List<String> dropdownlist = <String>[
 ];
 
 class _IdeaAddPageState extends State<IdeaAddPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   void signOut() {
     FirebaseAuth.instance.signOut();
   }
@@ -41,6 +43,10 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
 
   PlatformFile? pickedFile;
   UploadTask? uploadTask;
+  var _image;
+  var title;
+  var description;
+  var type;
 
   Future selectFile() async {
     final result = await FilePicker.platform.pickFiles();
@@ -48,12 +54,24 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
     setState(() {
       pickedFile = result.files.first;
     });
+    _image = pickedFile!.name;
   }
 
   Future uploadFile() async {
+    title = _controllers[0];
+    description = _controllers[1];
+
     final path = 'images/${pickedFile!.name}';
     final file = File(pickedFile!.path!);
     final ref = FirebaseStorage.instance.ref().child(path);
+
+    Idea(
+      id: FirebaseAuth.instance.currentUser!.uid,
+      image: path,
+      title: title.text,
+      description: description.text,
+      type: type,
+    );
 
     setState(() {
       uploadTask = ref.putFile(file);
@@ -184,119 +202,143 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
                 const SizedBox(
                   height: 15,
                 ),
-                TextField(
-                  controller: _controllers[0],
-                  decoration: InputDecoration(
-                    labelText: 'Title',
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: const OutlineInputBorder(),
-                    suffix: IconButton(
-                      onPressed: () {
-                        _controllers[0].clear();
-                      },
-                      icon: const Icon(
-                        Icons.clear,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                TextField(
-                  controller: _controllers[1],
-                  decoration: InputDecoration(
-                    labelText: 'Description',
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: const OutlineInputBorder(),
-                    suffix: IconButton(
-                      onPressed: () {
-                        _controllers[1].clear();
-                      },
-                      icon: const Icon(
-                        Icons.clear,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Align(
-                  alignment: const Alignment(
-                    -1,
-                    1,
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: DropdownButton<String>(
-                      value: dropdownvalue,
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
-                      icon: const Icon(
-                        Icons.expand_more,
-                        color: Colors.blue,
-                      ),
-                      underline: Container(
-                        height: 2,
-                        color: Colors.black,
-                      ),
-                      onChanged: (String? value) {
-                        setState(() {
-                          dropdownvalue = value!;
-                        });
-                      },
-                      items: dropdownlist
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: const TextStyle(
-                              color: Colors.black,
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Column(
+                        children: [
+                          TextFormField(
+                            controller: _controllers[0],
+                            decoration: InputDecoration(
+                              labelText: 'Title',
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: const OutlineInputBorder(),
+                              suffix: IconButton(
+                                onPressed: () {
+                                  _controllers[0].clear();
+                                },
+                                icon: const Icon(
+                                  Icons.clear,
+                                ),
+                              ),
                             ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Enter Title";
+                              }
+                            },
                           ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  children: [
-                    Center(
-                      child: SizedBox(
-                        height: 50,
-                        width: 200,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                pickedFile == null ? Colors.grey : Colors.black,
+                          const SizedBox(
+                            height: 15,
                           ),
-                          onPressed: pickedFile == null ? () {} : uploadFile,
-                          child: const Text(
-                            "Submit Idea",
-                            style: TextStyle(
+                          TextFormField(
+                            controller: _controllers[1],
+                            decoration: InputDecoration(
+                              labelText: 'Description',
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: const OutlineInputBorder(),
+                              suffix: IconButton(
+                                onPressed: () {
+                                  _controllers[1].clear();
+                                },
+                                icon: const Icon(
+                                  Icons.clear,
+                                ),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Enter Descritpion";
+                              }
+                            },
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                        ],
+                      ),
+                      Align(
+                        alignment: const Alignment(
+                          -1,
+                          1,
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: DropdownButton<String>(
+                            value: dropdownvalue,
+                            style: const TextStyle(
                               color: Colors.white,
                             ),
+                            icon: const Icon(
+                              Icons.expand_more,
+                              color: Colors.blue,
+                            ),
+                            underline: Container(
+                              height: 2,
+                              color: Colors.black,
+                            ),
+                            onChanged: (String? value) {
+                              setState(() {
+                                dropdownvalue = value!;
+                                type = value;
+                              });
+                            },
+                            items: dropdownlist
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(
+                                  value,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    buildProgress(),
-                  ],
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Row(
+                        children: [
+                          Center(
+                            child: SizedBox(
+                              height: 50,
+                              width: 200,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: pickedFile == null
+                                      ? Colors.grey
+                                      : Colors.black,
+                                ),
+                                onPressed:
+                                    pickedFile == null ? () {} : uploadFile,
+                                child: const Text(
+                                  "Submit Idea",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          buildProgress(),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

@@ -24,7 +24,6 @@ class _HomePageState extends State<HomePage> {
         .get()
         .then((value) {
       dbData = value.data();
-      print(dbData);
     });
     return dbData;
   }
@@ -47,7 +46,7 @@ class _HomePageState extends State<HomePage> {
                       return const CircularProgressIndicator();
                     } else {
                       final data = snapshot.data;
-                      print('RETRIEVED DATA >>>> ${data}');
+
                       return Expanded(
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),

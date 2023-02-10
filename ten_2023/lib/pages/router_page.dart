@@ -20,7 +20,6 @@ class RouterPage extends StatelessWidget {
         .get()
         .then((value) {
       dbData = value.data();
-      print(dbData);
     });
     return dbData;
   }
@@ -36,7 +35,6 @@ class RouterPage extends StatelessWidget {
             return const CircularProgressIndicator();
           } else {
             final data = snapshot.data;
-            print('RETRIEVED DATA >>>> ${data}');
             if (data['u_type'] == 'angel') {
               return AngelPage(data);
             }

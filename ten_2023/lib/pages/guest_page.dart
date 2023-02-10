@@ -103,7 +103,7 @@ class _GuestPageState extends State<GuestPage> {
                         context,
                         MaterialPageRoute(
                           builder: ((context) {
-                            return const ViewIdeiaPage();
+                            return ViewIdeiaPage();
                           }),
                         ),
                       );
