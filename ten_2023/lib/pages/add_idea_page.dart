@@ -21,9 +21,9 @@ class IdeaAddPage extends StatefulWidget {
 }
 
 const List<String> dropdownlist = <String>[
-  "Male",
-  "Female",
-  "Other",
+  "Investment",
+  "Guidance",
+  "Managment",
 ];
 
 class _IdeaAddPageState extends State<IdeaAddPage> {
