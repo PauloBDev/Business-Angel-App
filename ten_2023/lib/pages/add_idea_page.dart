@@ -6,11 +6,13 @@
 
 // paulo / joão
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'ideas.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'dart:typed_data';
 import 'auth_page.dart';
@@ -27,6 +29,21 @@ const List<String> dropdownlist = <String>[
   "Consultancy Management",
 ];
 
+class UsersProjects {
+  static CollectionReference usersRef =
+      FirebaseFirestore.instance.collection("users");
+
+  static Stream<QuerySnapshot> getProjects() {
+    // Returns all tables
+    return usersRef.snapshots();
+  }
+
+  static Stream<QuerySnapshot> getProjectsFromUsers(String uid) {
+    // Returns specific table orders
+    return usersRef.doc(uid).collection("projects").snapshots();
+  }
+}
+
 class _IdeaAddPageState extends State<IdeaAddPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   void signOut() {
@@ -40,6 +57,9 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
     "Titulo",
     "Descrição da Proposta",
   ];
+
+  var projectRef = UsersProjects.getProjectsFromUsers(
+      FirebaseAuth.instance.currentUser!.uid);
 
   PlatformFile? pickedFile;
   UploadTask? uploadTask;
@@ -55,6 +75,9 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
       pickedFile = result.files.first;
     });
     _image = pickedFile!.name;
+    debugPrint('\nProjRef: ${projectRef.forEach((e) {
+      debugPrint('\nE: ${e.toString()['desc']}\n');
+    })}\n');
   }
 
   Future uploadFile() async {
@@ -65,13 +88,15 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
     final file = File(pickedFile!.path!);
     final ref = FirebaseStorage.instance.ref().child(path);
 
-    Idea(
-      id: FirebaseAuth.instance.currentUser!.uid,
-      image: path,
-      title: title.text,
-      description: description.text,
-      type: type,
-    );
+    FirebaseFirestore.instance
+        .collection('projects')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({
+      'image': path,
+      'title': title.text,
+      'desc': description.text,
+      'type': type,
+    });
 
     setState(() {
       uploadTask = ref.putFile(file);
