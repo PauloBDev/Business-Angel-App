@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ten_2023/pages/add_idea_page.dart';
 import 'package:ten_2023/pages/view_idea_page.dart';
-
+import 'dumb_data.dart';
 import 'auth_page.dart';
 
 class GuestPage extends StatefulWidget {
@@ -24,7 +25,12 @@ class _GuestPageState extends State<GuestPage> {
 //    return SafeArea(child: Text('GUEST PAGE'));
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Guest'),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: Text(
+          'Welcome ${widget.data['username']}',
+          style: GoogleFonts.bebasNeue(fontSize: 36),
+        ),
         actions: [
           Container(
             padding: const EdgeInsets.all(3),
@@ -89,25 +95,21 @@ class _GuestPageState extends State<GuestPage> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: projects.length,
+                itemCount: ideas.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(
-                      projects[index],
-                      style: const TextStyle(
-                        fontSize: 22,
+                  return Column(
+                    children: [
+                      ListTile(
+                        title: Text(ideas[index].title),
+                        subtitle: Text(ideas[index].type),
+                        onTap: () {},
                       ),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: ((context) {
-                            return ViewIdeiaPage();
-                          }),
-                        ),
-                      );
-                    },
+                      const Divider(
+                        color: Colors.grey,
+                        indent: 15,
+                        endIndent: 15,
+                      )
+                    ],
                   );
                 },
               ),

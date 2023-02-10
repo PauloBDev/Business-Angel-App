@@ -9,6 +9,7 @@
 // Rocha / telmo
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ViewIdeiaPage extends StatefulWidget {
   const ViewIdeiaPage({Key? key}) : super(key: key);
@@ -39,6 +40,21 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: Text(
+          'Add idea',
+          style: GoogleFonts.bebasNeue(fontSize: 36),
+        ),
+        actions: [
+          Container(
+            padding: const EdgeInsets.all(3),
+            decoration: BoxDecoration(
+                color: Colors.black87, borderRadius: BorderRadius.circular(30)),
+          ),
+        ],
+      ),
       resizeToAvoidBottomInset: false,
       key: scaffoldKey,
       body: SafeArea(

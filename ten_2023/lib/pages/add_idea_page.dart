@@ -11,10 +11,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'ideas.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'dart:typed_data';
+import 'package:google_fonts/google_fonts.dart';
 import 'auth_page.dart';
 
 class IdeaAddPage extends StatefulWidget {
@@ -34,12 +31,10 @@ class UsersProjects {
       FirebaseFirestore.instance.collection("users");
 
   static Stream<QuerySnapshot> getProjects() {
-    // Returns all tables
     return usersRef.snapshots();
   }
 
   static Stream<QuerySnapshot> getProjectsFromUsers(String uid) {
-    // Returns specific table orders
     return usersRef.doc(uid).collection("projects").snapshots();
   }
 }
@@ -76,7 +71,7 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
     });
     _image = pickedFile!.name;
     debugPrint('\nProjRef: ${projectRef.forEach((e) {
-      debugPrint('\nE: ${e.toString()['desc']}\n');
+      debugPrint('\nE: ${e}\n');
     })}\n');
   }
 
@@ -151,29 +146,18 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Add idea'),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          title: Text(
+            'Add idea',
+            style: GoogleFonts.bebasNeue(fontSize: 36),
+          ),
           actions: [
             Container(
               padding: const EdgeInsets.all(3),
               decoration: BoxDecoration(
                   color: Colors.black87,
                   borderRadius: BorderRadius.circular(30)),
-              child: IconButton(
-                  onPressed: () {
-                    signOut();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: ((context) {
-                          return const AuthPage();
-                        }),
-                      ),
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.logout,
-                    color: Colors.white,
-                  )),
             ),
           ],
         ),
@@ -212,7 +196,7 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
                         ),
                         onPressed: selectFile,
                         child: const Text(
-                          "Selecione File",
+                          "Select file",
                           style: TextStyle(
                             color: Colors.white,
                           ),
