@@ -77,16 +77,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: 50,
               ),
               Image.asset(
-                'lib/images/login_page_logo_256.png',
-                height: 150,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Text(
-                  'Business Angels\nApp',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.bebasNeue(fontSize: 26),
-                ),
+                'lib/images/business_logo.png',
+                height: 300,
               ),
               Form(
                 key: _formKey,
