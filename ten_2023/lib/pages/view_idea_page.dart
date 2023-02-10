@@ -83,6 +83,14 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
                       fontFamily: 'Work Sans',
                     )),
               ),
+              const Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(15, 30, 15, 0),
+                child: Text('Type : ',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Work Sans',
+                    )),
+              ),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
                 child: Row(
