@@ -22,8 +22,8 @@ class IdeaAddPage extends StatefulWidget {
 
 const List<String> dropdownlist = <String>[
   "Investment",
-  "Guidance",
-  "Managment",
+  "Expert Guidance",
+  "Consultancy Management",
 ];
 
 class _IdeaAddPageState extends State<IdeaAddPage> {
@@ -284,7 +284,7 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
                           ),
                           onPressed: pickedFile == null ? () {} : uploadFile,
                           child: const Text(
-                            "Upload File",
+                            "Submit Idea",
                             style: TextStyle(
                               color: Colors.white,
                             ),
