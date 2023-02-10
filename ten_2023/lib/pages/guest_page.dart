@@ -94,6 +94,9 @@ class _GuestPageState extends State<GuestPage> {
                   return ListTile(
                     title: Text(
                       projects[index],
+                      style: const TextStyle(
+                        fontSize: 22,
+                      ),
                     ),
                     onTap: () {
                       Navigator.push(
