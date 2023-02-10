@@ -87,7 +87,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 width: 50,
               ),
               Image.asset(
-                'lib/images/register_page_logo_256.png',
+                'lib/images/business_logo.png',
                 height: 100,
               ),
               Padding(
