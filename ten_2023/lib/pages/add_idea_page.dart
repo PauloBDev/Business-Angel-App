@@ -55,18 +55,31 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
   }
 
   Future uploadFile() async {
+    List<String> _allProjsID = [];
     title = _controllers[0];
     description = _controllers[1];
     final path = 'images/${pickedFile!.name}';
     final file = File(pickedFile!.path!);
     final ref = FirebaseStorage.instance.ref().child(path);
 
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('projects')
+        .get()
+        .then(
+          (value) => value.docs.forEach((element) async {
+            _allProjsID.add(element.reference.id);
+          }),
+        );
+
     FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('projects')
-        .doc('${FirebaseAuth.instance.currentUser!.uid}+2')
-        .update({
+        .doc(
+            '${FirebaseAuth.instance.currentUser!.uid}${_allProjsID.length + 1}')
+        .set({
       'image': path,
       'title': title.text,
       'desc': description.text,
