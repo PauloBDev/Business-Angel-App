@@ -114,6 +114,7 @@ class _GuestPageState extends State<GuestPage> {
               child: FutureBuilder(
                 future: getProjectID(),
                 builder: ((context, snapshot) {
+                  print(_allProjsID);
                   if (snapshot.connectionState == ConnectionState.done &&
                       _allProjsID.isEmpty) {
                     return const Text('Currently no active ideas...');

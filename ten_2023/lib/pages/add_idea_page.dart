@@ -62,8 +62,10 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
     final ref = FirebaseStorage.instance.ref().child(path);
 
     FirebaseFirestore.instance
-        .collection('projects')
+        .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('projects')
+        .doc('${FirebaseAuth.instance.currentUser!.uid}+2')
         .update({
       'image': path,
       'title': title.text,
