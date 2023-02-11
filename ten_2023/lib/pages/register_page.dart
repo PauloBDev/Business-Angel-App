@@ -113,7 +113,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                   ListTile(
-                    title: const Text('Guest'),
+                    title: const Text('Entrepreneur'),
                     leading: Radio<String>(
                       groupValue: _userType,
                       value: 'guest',

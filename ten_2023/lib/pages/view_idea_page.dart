@@ -34,7 +34,7 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('projects')
-        .doc(widget.docID) // Hardcoded change later
+        .doc(widget.docID)
         .get()
         .then((value) {
       _image = value.data()!['img_path'];

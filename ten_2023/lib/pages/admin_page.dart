@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'auth_page.dart';
 
 class AdminPage extends StatefulWidget {
@@ -17,11 +16,10 @@ class _AdminPageState extends State<AdminPage> {
 
   @override
   Widget build(BuildContext context) {
-//    return SafeArea(child: Text('GUEST PAGE'));
     return Scaffold(
       body: SafeArea(
         child: Row(children: [
-          Text('ADMIN'),
+          const Text('ADMIN'),
           Container(
             padding: const EdgeInsets.all(3),
             decoration: BoxDecoration(

@@ -28,7 +28,7 @@ class RouterPage extends StatelessWidget {
         future: getInfo(),
         builder: ((context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           } else {
             final data = snapshot.data;
             if (data['u_type'] == 'angel') {

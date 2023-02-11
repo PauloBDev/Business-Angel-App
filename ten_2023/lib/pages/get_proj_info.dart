@@ -30,9 +30,9 @@ class GetProjTitle extends StatelessWidget {
   }
 }
 
-class GetProjDesc extends StatelessWidget {
+class GetProjType extends StatelessWidget {
   final String docID;
-  const GetProjDesc({required this.docID});
+  const GetProjType({required this.docID});
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +48,10 @@ class GetProjDesc extends StatelessWidget {
           Map<String, dynamic> data =
               snapshot.data!.data() as Map<String, dynamic>;
           return Text(
-            data['img_path'],
+            data['type'],
           );
         }
-        return Text('Loading...');
+        return const Text('Loading...');
       }),
     );
   }

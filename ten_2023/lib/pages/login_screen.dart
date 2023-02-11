@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ten_2023/pages/add_idea_page.dart';
-import 'auth_page.dart';
 import 'register_page.dart';
 
 //ten_admin123

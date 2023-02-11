@@ -104,8 +104,10 @@ class _GuestPageState extends State<GuestPage> {
                 ],
               ),
             ),
-            const SizedBox(
-              height: 30,
+            const Divider(
+              color: Colors.grey,
+              indent: 15,
+              endIndent: 15,
             ),
             Expanded(
               child: FutureBuilder(
@@ -118,7 +120,7 @@ class _GuestPageState extends State<GuestPage> {
                         children: [
                           ListTile(
                             title: GetProjTitle(docID: _allProjsID[index]),
-                            subtitle: GetProjDesc(docID: _allProjsID[index]),
+                            subtitle: GetProjType(docID: _allProjsID[index]),
                             onTap: () {
                               Navigator.push(
                                 context,
