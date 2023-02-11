@@ -62,6 +62,16 @@ class _AngelPageState extends State<AngelPage> {
                 itemCount: ideas.length,
                 itemBuilder: (context, index) {
                   return ListTile(
+                    onTap: () {
+                      //Navigator.push(
+                      //  context,
+                      //  MaterialPageRoute(
+                      //    builder: ((context) {
+                      //      return ViewIdeiaPage();
+                      //    }),
+                      //  ),
+                      //);
+                    },
                     title: Text(ideas[index].title),
                     subtitle: Text(ideas[index].type),
                   );

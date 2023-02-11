@@ -12,7 +12,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'auth_page.dart';
 
 class IdeaAddPage extends StatefulWidget {
   const IdeaAddPage({super.key});
@@ -26,25 +25,8 @@ const List<String> dropdownlist = <String>[
   "Consultancy Management",
 ];
 
-class UsersProjects {
-  static CollectionReference usersRef =
-      FirebaseFirestore.instance.collection("users");
-
-  static Stream<QuerySnapshot> getProjects() {
-    return usersRef.snapshots();
-  }
-
-  static Stream<QuerySnapshot> getProjectsFromUsers(String uid) {
-    return usersRef.doc(uid).collection("projects").snapshots();
-  }
-}
-
 class _IdeaAddPageState extends State<IdeaAddPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  void signOut() {
-    FirebaseAuth.instance.signOut();
-  }
-
   String dropdownvalue = dropdownlist.first;
   final List<TextEditingController> _controllers =
       List.generate(2, (i) => TextEditingController());
@@ -52,16 +34,16 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
     "Titulo",
     "Descrição da Proposta",
   ];
-
-  var projectRef = UsersProjects.getProjectsFromUsers(
-      FirebaseAuth.instance.currentUser!.uid);
-
   PlatformFile? pickedFile;
   UploadTask? uploadTask;
   var _image;
   var title;
   var description;
   var type;
+
+  void signOut() {
+    FirebaseAuth.instance.signOut();
+  }
 
   Future selectFile() async {
     final result = await FilePicker.platform.pickFiles();
@@ -70,15 +52,11 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
       pickedFile = result.files.first;
     });
     _image = pickedFile!.name;
-    debugPrint('\nProjRef: ${projectRef.forEach((e) {
-      debugPrint('\nE: ${e}\n');
-    })}\n');
   }
 
   Future uploadFile() async {
     title = _controllers[0];
     description = _controllers[1];
-
     final path = 'images/${pickedFile!.name}';
     final file = File(pickedFile!.path!);
     final ref = FirebaseStorage.instance.ref().child(path);
@@ -145,213 +123,213 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          title: Text(
-            'Add idea',
-            style: GoogleFonts.bebasNeue(fontSize: 36),
-          ),
-          actions: [
-            Container(
-              padding: const EdgeInsets.all(3),
-              decoration: BoxDecoration(
-                  color: Colors.black87,
-                  borderRadius: BorderRadius.circular(30)),
-            ),
-          ],
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: Text(
+          'Add idea',
+          style: GoogleFonts.bebasNeue(fontSize: 36),
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 30.0,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 5,
+        actions: [
+          Container(
+            padding: const EdgeInsets.all(3),
+            decoration: BoxDecoration(
+                color: Colors.black87, borderRadius: BorderRadius.circular(30)),
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 30.0,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 5,
+              ),
+              if (pickedFile != null)
+                SafeArea(
+                  child: Center(
+                    child: Image.file(
+                      File(pickedFile!.path!),
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-                if (pickedFile != null)
-                  SafeArea(
-                    child: Center(
-                      child: Image.file(
-                        File(pickedFile!.path!),
-                        width: double.infinity,
-                        fit: BoxFit.cover,
+              const SizedBox(
+                height: 15,
+              ),
+              Column(
+                children: [
+                  SizedBox(
+                    height: 50,
+                    width: 200,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                      ),
+                      onPressed: selectFile,
+                      child: const Text(
+                        "Select file",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Row(
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Form(
+                key: _formKey,
+                child: Column(
                   children: [
-                    SizedBox(
-                      height: 50,
-                      width: 200,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
+                    Column(
+                      children: [
+                        TextFormField(
+                          controller: _controllers[0],
+                          decoration: InputDecoration(
+                            labelText: 'Title',
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: const OutlineInputBorder(),
+                            suffix: IconButton(
+                              onPressed: () {
+                                _controllers[0].clear();
+                              },
+                              icon: const Icon(
+                                Icons.clear,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Enter Title";
+                            }
+                          },
                         ),
-                        onPressed: selectFile,
-                        child: const Text(
-                          "Select file",
-                          style: TextStyle(
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        TextFormField(
+                          controller: _controllers[1],
+                          decoration: InputDecoration(
+                            labelText: 'Description',
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: const OutlineInputBorder(),
+                            suffix: IconButton(
+                              onPressed: () {
+                                _controllers[1].clear();
+                              },
+                              icon: const Icon(
+                                Icons.clear,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Enter Descritpion";
+                            }
+                          },
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                      ],
+                    ),
+                    Align(
+                      alignment: const Alignment(
+                        -1,
+                        1,
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: DropdownButton<String>(
+                          value: dropdownvalue,
+                          style: const TextStyle(
                             color: Colors.white,
                           ),
+                          icon: const Icon(
+                            Icons.expand_more,
+                            color: Colors.blue,
+                          ),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.black,
+                          ),
+                          onChanged: (String? value) {
+                            setState(() {
+                              dropdownvalue = value!;
+                              type = value;
+                            });
+                          },
+                          items: dropdownlist
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                ),
+                              ),
+                            );
+                          }).toList(),
                         ),
                       ),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      children: [
+                        Center(
+                          child: SizedBox(
+                            height: 50,
+                            width: 200,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: pickedFile == null
+                                    ? Colors.grey
+                                    : Colors.black,
+                              ),
+                              onPressed:
+                                  pickedFile == null ? () {} : uploadFile,
+                              child: const Text(
+                                "Submit Idea",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        buildProgress(),
+                      ],
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      Column(
-                        children: [
-                          TextFormField(
-                            controller: _controllers[0],
-                            decoration: InputDecoration(
-                              labelText: 'Title',
-                              filled: true,
-                              fillColor: Colors.white,
-                              border: const OutlineInputBorder(),
-                              suffix: IconButton(
-                                onPressed: () {
-                                  _controllers[0].clear();
-                                },
-                                icon: const Icon(
-                                  Icons.clear,
-                                ),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Enter Title";
-                              }
-                            },
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          TextFormField(
-                            controller: _controllers[1],
-                            decoration: InputDecoration(
-                              labelText: 'Description',
-                              filled: true,
-                              fillColor: Colors.white,
-                              border: const OutlineInputBorder(),
-                              suffix: IconButton(
-                                onPressed: () {
-                                  _controllers[1].clear();
-                                },
-                                icon: const Icon(
-                                  Icons.clear,
-                                ),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Enter Descritpion";
-                              }
-                            },
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                        ],
-                      ),
-                      Align(
-                        alignment: const Alignment(
-                          -1,
-                          1,
-                        ),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: DropdownButton<String>(
-                            value: dropdownvalue,
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
-                            icon: const Icon(
-                              Icons.expand_more,
-                              color: Colors.blue,
-                            ),
-                            underline: Container(
-                              height: 2,
-                              color: Colors.black,
-                            ),
-                            onChanged: (String? value) {
-                              setState(() {
-                                dropdownvalue = value!;
-                                type = value;
-                              });
-                            },
-                            items: dropdownlist
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      Row(
-                        children: [
-                          Center(
-                            child: SizedBox(
-                              height: 50,
-                              width: 200,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: pickedFile == null
-                                      ? Colors.grey
-                                      : Colors.black,
-                                ),
-                                onPressed:
-                                    pickedFile == null ? () {} : uploadFile,
-                                child: const Text(
-                                  "Submit Idea",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          buildProgress(),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

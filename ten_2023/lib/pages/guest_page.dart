@@ -1,9 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ten_2023/pages/add_idea_page.dart';
+import 'package:ten_2023/pages/get_proj_info.dart';
 import 'package:ten_2023/pages/view_idea_page.dart';
-import 'dumb_data.dart';
 import 'auth_page.dart';
 
 class GuestPage extends StatefulWidget {
@@ -15,14 +16,27 @@ class GuestPage extends StatefulWidget {
 }
 
 class _GuestPageState extends State<GuestPage> {
-  List<String> projects = ['title 1', 'title 2'];
+  List<String> _allProjsID = [];
+
+  Future getProjectID() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('projects')
+        .get()
+        .then(
+          (value) => value.docs.forEach((element) async {
+            _allProjsID.add(element.reference.id);
+          }),
+        );
+  }
+
   void signOut() {
     FirebaseAuth.instance.signOut();
   }
 
   @override
   Widget build(BuildContext context) {
-//    return SafeArea(child: Text('GUEST PAGE'));
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -76,7 +90,7 @@ class _GuestPageState extends State<GuestPage> {
                       onPressed: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return const IdeaAddPage();
+                          return IdeaAddPage();
                         }));
                       },
                       child: const Text(
@@ -94,24 +108,39 @@ class _GuestPageState extends State<GuestPage> {
               height: 30,
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: ideas.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      ListTile(
-                        title: Text(ideas[index].title),
-                        subtitle: Text(ideas[index].type),
-                        onTap: () {},
-                      ),
-                      const Divider(
-                        color: Colors.grey,
-                        indent: 15,
-                        endIndent: 15,
-                      )
-                    ],
+              child: FutureBuilder(
+                future: getProjectID(),
+                builder: ((context, snapshot) {
+                  return ListView.builder(
+                    itemCount: _allProjsID.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          ListTile(
+                            title: GetProjTitle(docID: _allProjsID[index]),
+                            subtitle: GetProjDesc(docID: _allProjsID[index]),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: ((context) {
+                                    return ViewIdeiaPage(
+                                        docID: _allProjsID[index]);
+                                  }),
+                                ),
+                              );
+                            },
+                          ),
+                          const Divider(
+                            color: Colors.grey,
+                            indent: 15,
+                            endIndent: 15,
+                          )
+                        ],
+                      );
+                    },
                   );
-                },
+                }),
               ),
             ),
           ],

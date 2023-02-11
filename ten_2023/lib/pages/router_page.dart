@@ -1,11 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:ten_2023/pages/add_idea_page.dart';
 import 'package:ten_2023/pages/admin_page.dart';
-import 'package:ten_2023/pages/auth_page.dart';
-
 import 'angel_page.dart';
 import 'guest_page.dart';
 
