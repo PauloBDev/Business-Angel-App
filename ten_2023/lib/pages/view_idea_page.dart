@@ -24,8 +24,16 @@ class ViewIdeiaPage extends StatefulWidget {
 }
 
 class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
-  List<String> comments = ["Muito bom", "Parabens", "Projeto interessante"];
-  List<String> users = ["BusinessAngel", "Teste2", "hgrfdsa"];
+  List<String> comments = [
+    "Muito bom",
+    "Parabens",
+    "Projeto interessante",
+  ];
+  List<String> users = [
+    "BusinessAngel",
+    "Invester",
+    "Manager",
+  ];
   TextEditingController? textController;
   final _unfocusNode = FocusNode();
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -73,7 +81,6 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
     return FutureBuilder(
       future: getProjectID(),
       builder: ((context, snapshot) {
-        debugPrint(_image);
         return Scaffold(
           appBar: AppBar(
             elevation: 0,
