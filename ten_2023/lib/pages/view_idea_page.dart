@@ -8,6 +8,7 @@
 // Rocha / telmo
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -21,6 +22,7 @@ class ViewIdeiaPage extends StatefulWidget {
 
 class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
   List<String> comments = ["Teste1.", "Teste2", "hgrfdsa"];
+
   TextEditingController? textController;
   final _unfocusNode = FocusNode();
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -62,9 +64,7 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
     return FutureBuilder(
       future: getProjectID(),
       builder: ((context, snapshot) {
-        debugPrint(
-            '<<<<<<<<<<<<<<<<<<<<$_title<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
-
+        debugPrint(_image);
         return Scaffold(
           appBar: AppBar(
             elevation: 0,
@@ -98,7 +98,7 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: Image.network(
-                          'https://firebasestorage.googleapis.com/v0/b/ten-2022.appspot.com/o/images%2FIMG-20230212-WA0000.jpg?alt=media&token=75861ff0-5c96-46e5-ac60-f9bcc5c2b3ad',
+                          '$_image',
                           width: 200,
                           height: 200,
                           fit: BoxFit.cover,

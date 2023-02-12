@@ -88,7 +88,7 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
         .doc(
             '${FirebaseAuth.instance.currentUser!.uid}${_allProjsID.length + 1}')
         .set({
-      'image': urlDownload,
+      'img_path': urlDownload,
       'title': title.text,
       'desc': description.text,
       'type': type,
