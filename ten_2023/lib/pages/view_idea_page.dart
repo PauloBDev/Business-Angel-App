@@ -6,11 +6,14 @@
 // descrição
 // comentário se possivel
 // Rocha / telmo
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ten_2023/pages/guest_page.dart';
 
 class ViewIdeiaPage extends StatefulWidget {
   String docID;
@@ -21,8 +24,8 @@ class ViewIdeiaPage extends StatefulWidget {
 }
 
 class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
-  List<String> comments = ["Teste1.", "Teste2", "hgrfdsa"];
-
+  List<String> comments = ["Muito bom", "Parabens", "Projeto interessante"];
+  List<String> users = ["BusinessAngel", "Teste2", "hgrfdsa"];
   TextEditingController? textController;
   final _unfocusNode = FocusNode();
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -50,6 +53,12 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
   void initState() {
     super.initState();
     textController = TextEditingController();
+    Timer.periodic(const Duration(seconds: 1), (_) {
+      setState(() {
+        users;
+        comments;
+      });
+    });
   }
 
   @override
@@ -229,7 +238,10 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
                                 style: ElevatedButton.styleFrom(
                                     minimumSize: const Size(90, 40)),
                                 onPressed: () {
-                                  print('Button pressed ...');
+                                  textController?.text;
+                                  comments.insert(0, textController!.text);
+                                  users.insert(
+                                      0, GuestPage.userData['username']);
                                 },
                                 child: const Text('Send'),
                               ),
@@ -249,7 +261,8 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
                             width: 50,
                             height: 50,
                           ),
-                          title: Text(comments[index]),
+                          title: Text(users[index]),
+                          subtitle: Text(comments[index]),
                         );
                       },
                     ),

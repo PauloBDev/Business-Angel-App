@@ -9,7 +9,10 @@ import 'auth_page.dart';
 
 class GuestPage extends StatefulWidget {
   var data;
-  GuestPage(this.data, {super.key});
+  static var userData;
+  GuestPage(this.data, {super.key}) {
+    userData = data;
+  }
 
   @override
   State<GuestPage> createState() => _GuestPageState();
