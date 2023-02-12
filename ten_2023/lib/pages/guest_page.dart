@@ -121,46 +121,58 @@ class _GuestPageState extends State<GuestPage> {
               endIndent: 15,
             ),
             Expanded(
-              child: FutureBuilder(
-                future: getProjectID(),
-                builder: ((context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done &&
-                      _allProjsID.isEmpty) {
-                    return const Text('Currently no active ideas...');
-                  }
-                  return RefreshIndicator(
-                    onRefresh: resfresh,
-                    child: ListView.builder(
-                      itemCount: _allProjsID.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            ListTile(
-                              title: GetProjTitle(docID: _allProjsID[index]),
-                              subtitle: GetProjType(docID: _allProjsID[index]),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: ((context) {
-                                      return ViewIdeiaPage(
-                                          docID: _allProjsID[index]);
-                                    }),
-                                  ),
-                                );
-                              },
-                            ),
-                            const Divider(
-                              color: Colors.grey,
-                              indent: 15,
-                              endIndent: 15,
-                            )
-                          ],
+              child: RefreshIndicator(
+                onRefresh: resfresh,
+                child: FutureBuilder(
+                  future: getProjectID(),
+                  builder: ((context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (_allProjsID.isEmpty) {
+                        return ListView.builder(
+                          itemCount: 1,
+                          itemBuilder: (context, index) {
+                            return const Center(
+                              child: Text(
+                                'Currently no active ideas...',
+                              ),
+                            );
+                          },
                         );
-                      },
-                    ),
-                  );
-                }),
+                      }
+                      return ListView.builder(
+                        itemCount: _allProjsID.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              ListTile(
+                                title: GetProjTitle(docID: _allProjsID[index]),
+                                subtitle:
+                                    GetProjType(docID: _allProjsID[index]),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: ((context) {
+                                        return ViewIdeiaPage(
+                                            docID: _allProjsID[index]);
+                                      }),
+                                    ),
+                                  );
+                                },
+                              ),
+                              const Divider(
+                                color: Colors.grey,
+                                indent: 15,
+                                endIndent: 15,
+                              )
+                            ],
+                          );
+                        },
+                      );
+                    }
+                    return Text('');
+                  }),
+                ),
               ),
             ),
           ],

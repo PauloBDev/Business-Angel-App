@@ -27,7 +27,8 @@ const List<String> dropdownlist = <String>[
 
 class _IdeaAddPageState extends State<IdeaAddPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String dropdownvalue = dropdownlist.first;
+  var dropdownvalue = dropdownlist.first;
+
   final List<TextEditingController> _controllers =
       List.generate(2, (i) => TextEditingController());
   var listaTexto = [
@@ -39,7 +40,7 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
   var _image;
   var title;
   var description;
-  var type;
+  var type = dropdownlist[0];
 
   void signOut() {
     FirebaseAuth.instance.signOut();
@@ -73,6 +74,13 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
           }),
         );
 
+    setState(() {
+      uploadTask = ref.putFile(file);
+    });
+
+    final snapshot = await uploadTask!.whenComplete(() {});
+    final String urlDownload = await snapshot.ref.getDownloadURL();
+    debugPrint(urlDownload);
     FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -80,19 +88,11 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
         .doc(
             '${FirebaseAuth.instance.currentUser!.uid}${_allProjsID.length + 1}')
         .set({
-      'image': path,
+      'image': urlDownload,
       'title': title.text,
       'desc': description.text,
       'type': type,
     });
-
-    setState(() {
-      uploadTask = ref.putFile(file);
-    });
-
-    final snapshot = await uploadTask!.whenComplete(() {});
-    final urlDownload = await snapshot.ref.getDownloadURL();
-
     setState(() {
       uploadTask = null;
     });
@@ -285,18 +285,18 @@ class _IdeaAddPageState extends State<IdeaAddPage> {
                             height: 2,
                             color: Colors.black,
                           ),
-                          onChanged: (String? value) {
+                          onChanged: (String? change) {
                             setState(() {
-                              dropdownvalue = value!;
-                              type = value;
+                              dropdownvalue = change!;
+                              type = change;
                             });
                           },
                           items: dropdownlist
-                              .map<DropdownMenuItem<String>>((String value) {
+                              .map<DropdownMenuItem<String>>((String item) {
                             return DropdownMenuItem<String>(
-                              value: value,
+                              value: item,
                               child: Text(
-                                value,
+                                item,
                                 style: const TextStyle(
                                   color: Colors.black,
                                 ),

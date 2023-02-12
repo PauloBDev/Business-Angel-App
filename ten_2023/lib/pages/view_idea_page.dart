@@ -62,6 +62,9 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
     return FutureBuilder(
       future: getProjectID(),
       builder: ((context, snapshot) {
+        debugPrint(
+            '<<<<<<<<<<<<<<<<<<<<$_title<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+
         return Scaffold(
           appBar: AppBar(
             elevation: 0,
@@ -94,8 +97,8 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
                       padding: EdgeInsetsDirectional.fromSTEB(0, 78, 0, 0),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
-                        child: Image.asset(
-                          'lib/images/3237155-200.png',
+                        child: Image.network(
+                          'https://firebasestorage.googleapis.com/v0/b/ten-2022.appspot.com/o/images%2FIMG-20230212-WA0000.jpg?alt=media&token=75861ff0-5c96-46e5-ac60-f9bcc5c2b3ad',
                           width: 200,
                           height: 200,
                           fit: BoxFit.cover,
