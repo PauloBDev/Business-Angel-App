@@ -160,7 +160,7 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
                                   decoration: BoxDecoration(),
                                   child: TextFormField(
                                     controller: textController,
-                                    autofocus: true,
+                                    autofocus: false,
                                     obscureText: false,
                                     decoration: const InputDecoration(
                                       labelText: 'Add  a comment..',
