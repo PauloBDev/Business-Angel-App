@@ -17,6 +17,16 @@ class GuestPage extends StatefulWidget {
 
 class _GuestPageState extends State<GuestPage> {
   List<String> _allProjsID = [];
+  List<String> test = [];
+
+  Future resfresh() async {
+    test = _allProjsID;
+    _allProjsID.clear();
+    setState(() {
+      _allProjsID;
+    });
+    _allProjsID = test;
+  }
 
   Future getProjectID() async {
     await FirebaseFirestore.instance
@@ -118,34 +128,37 @@ class _GuestPageState extends State<GuestPage> {
                       _allProjsID.isEmpty) {
                     return const Text('Currently no active ideas...');
                   }
-                  return ListView.builder(
-                    itemCount: _allProjsID.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          ListTile(
-                            title: GetProjTitle(docID: _allProjsID[index]),
-                            subtitle: GetProjType(docID: _allProjsID[index]),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: ((context) {
-                                    return ViewIdeiaPage(
-                                        docID: _allProjsID[index]);
-                                  }),
-                                ),
-                              );
-                            },
-                          ),
-                          const Divider(
-                            color: Colors.grey,
-                            indent: 15,
-                            endIndent: 15,
-                          )
-                        ],
-                      );
-                    },
+                  return RefreshIndicator(
+                    onRefresh: resfresh,
+                    child: ListView.builder(
+                      itemCount: _allProjsID.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            ListTile(
+                              title: GetProjTitle(docID: _allProjsID[index]),
+                              subtitle: GetProjType(docID: _allProjsID[index]),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: ((context) {
+                                      return ViewIdeiaPage(
+                                          docID: _allProjsID[index]);
+                                    }),
+                                  ),
+                                );
+                              },
+                            ),
+                            const Divider(
+                              color: Colors.grey,
+                              indent: 15,
+                              endIndent: 15,
+                            )
+                          ],
+                        );
+                      },
+                    ),
                   );
                 }),
               ),
