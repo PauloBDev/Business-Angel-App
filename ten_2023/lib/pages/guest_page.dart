@@ -157,6 +157,7 @@ class _GuestPageState extends State<GuestPage> {
                                     MaterialPageRoute(
                                       builder: ((context) {
                                         return ViewIdeiaPage(
+                                            userID: widget.data['userID'],
                                             docID: _allProjsID[index]);
                                       }),
                                     ),

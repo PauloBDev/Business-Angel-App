@@ -7,7 +7,7 @@
 // comentário se possivel
 // Rocha / telmo
 import 'dart:async';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -17,7 +17,8 @@ import 'package:ten_2023/pages/guest_page.dart';
 
 class ViewIdeiaPage extends StatefulWidget {
   String docID;
-  ViewIdeiaPage({required this.docID, super.key});
+  String userID;
+  ViewIdeiaPage({required this.userID, required this.docID, super.key});
 
   @override
   _ViewIdeiaPageState createState() => _ViewIdeiaPageState();
@@ -45,7 +46,7 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
   Future getProjectID() async {
     await FirebaseFirestore.instance
         .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .doc(widget.userID)
         .collection('projects')
         .doc(widget.docID)
         .get()
@@ -108,13 +109,17 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Align(
-                    alignment: AlignmentDirectional(0, -1),
+                    alignment: const AlignmentDirectional(0, -1),
                     child: Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 78, 0, 0),
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(0, 78, 0, 0),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
-                        child: Image.network(
-                          '$_image',
+                        child: CachedNetworkImage(
+                          placeholder: (context, url) {
+                            return const CircularProgressIndicator();
+                          },
+                          imageUrl: '$_image',
                           width: 200,
                           height: 200,
                           fit: BoxFit.cover,
@@ -123,9 +128,9 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
                     ),
                   ),
                   Align(
-                    alignment: AlignmentDirectional(0, 0),
+                    alignment: const AlignmentDirectional(0, 0),
                     child: Text(
-                      '${_title}',
+                      '$_title',
                       style: const TextStyle(
                         fontFamily: 'Work Sans',
                         fontSize: 30,
@@ -134,23 +139,25 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(15, 30, 15, 0),
-                    child: Text('${_description}',
+                    padding:
+                        const EdgeInsetsDirectional.fromSTEB(15, 30, 15, 0),
+                    child: Text('$_description',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontFamily: 'Work Sans',
                         )),
                   ),
                   Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(15, 30, 15, 0),
-                    child: Text('${_type}',
+                    padding:
+                        const EdgeInsetsDirectional.fromSTEB(15, 30, 15, 0),
+                    child: Text('$_type',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontFamily: 'Work Sans',
                         )),
                   ),
                   Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [
@@ -158,8 +165,8 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(6, 0, 0, 0),
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  6, 0, 0, 0),
                               child: Image.asset(
                                 'lib/images/2366460-200.png',
                                 width: 50,
@@ -239,8 +246,8 @@ class _ViewIdeiaPageState extends State<ViewIdeiaPage> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  0, 0, 10, 0),
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                     minimumSize: const Size(90, 40)),

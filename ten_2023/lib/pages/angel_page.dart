@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ten_2023/pages/view_idea_page.dart';
 import 'auth_page.dart';
 
 class AngelPage extends StatefulWidget {
@@ -113,7 +114,7 @@ class _AngelPageState extends State<AngelPage> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (snapshot.connectionState == ConnectionState.done &&
-                      _allUserID.isEmpty) {
+                      _allProjs.isEmpty) {
                     return const Text(
                         'There are currently no business ideas...');
                   }
@@ -133,7 +134,18 @@ class _AngelPageState extends State<AngelPage> {
                             subtitle: Text(_allProjs[index]['type']),
                             trailing: Text(
                                 'Project by:\n${_allProjs[index]['username']}'), // Limit number of username characters in register page
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: ((context) {
+                                    return ViewIdeiaPage(
+                                        userID: _allProjs[index]['userID'],
+                                        docID: _allProjs[index]['projID']);
+                                  }),
+                                ),
+                              );
+                            },
                           ),
                           const Divider(
                             color: Colors.grey,

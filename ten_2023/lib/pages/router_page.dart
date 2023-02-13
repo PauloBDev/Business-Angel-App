@@ -15,7 +15,9 @@ class RouterPage extends StatelessWidget {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get()
         .then((value) {
-      dbData = value.data();
+      Map<String, dynamic>? t = value.data();
+      t!['userID'] = FirebaseAuth.instance.currentUser!.uid;
+      dbData = t;
     });
     return dbData;
   }
