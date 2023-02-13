@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,13 +14,15 @@ class AngelPage extends StatefulWidget {
 }
 
 class _AngelPageState extends State<AngelPage> {
-  List<String> _allUserID = [];
+  List<List<String>> _allUserID = [];
+  List<Map<String, dynamic>> _allProjs = [];
+  Map<String, List<Map<String, dynamic>>> allContens = {};
 
   void signOut() {
     FirebaseAuth.instance.signOut();
   }
 
-  Future getUsersID() async {
+  Future getAllProjs() async {
     await FirebaseFirestore.instance
         .collection('users')
         .get()
@@ -27,44 +30,31 @@ class _AngelPageState extends State<AngelPage> {
               if (element.data()['u_type'] == 'guest') {
                 String currID = element.reference.id;
                 String currUsername = element.data()['username'];
-                _allUserID.add(element.reference.id);
-                FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(element.reference.id)
-                    .collection('projects')
-                    .get()
-                    .then((value) {
-                  value.docs.forEach(
-                    (element) {
-                      if (element.data().length > 0) {
-                        _allUserID.add(element.reference.id);
-                        print(element.data().length);
-                        print(_allUserID);
-                        print(
-                            '[${currID} | ${currUsername}] : (${element.data()}) \n');
-                      }
-                    },
-                  );
-                  //print('ID > ${element.reference.id} : USERNAME > ${value.data()!['username']}');
-                  //getUserProj(element.reference.id);
-                });
+                _allUserID.add([currID, currUsername]);
               }
             }));
 
-    return _allUserID;
-  }
+    for (int i = 0; i < _allUserID.length; i++) {
+      String id = _allUserID[i][0];
+      String username = _allUserID[i][1];
 
-  Future getUserProj(String userID) async {
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userID)
-        .collection('projects')
-        .get()
-        .then(
-          (value) => value.docs.forEach((element) async {
-            print('${userID} : (${element.reference.id}) ${element.data()}');
-          }),
-        );
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(id)
+          .collection('projects')
+          .get()
+          .then((value) {
+        if (value.docs.isNotEmpty) {
+          value.docs.forEach((element) {
+            Map<String, dynamic> t = element.data();
+            t['username'] = username;
+            t['userID'] = id;
+            t['projID'] = element.reference.id;
+            _allProjs.add(t);
+          });
+        }
+      });
+    }
   }
 
   @override
@@ -73,6 +63,7 @@ class _AngelPageState extends State<AngelPage> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
+        centerTitle: true,
         title: Text(
           'Welcome ${widget.data['username']}',
           style: GoogleFonts.bebasNeue(fontSize: 36),
@@ -104,46 +95,53 @@ class _AngelPageState extends State<AngelPage> {
       body: SafeArea(
         child: Column(
           children: [
+            Text(
+              'Browse the projects of entrepreneurs below!',
+              style: GoogleFonts.bebasNeue(fontSize: 20),
+            ),
+            const Divider(
+              color: Colors.grey,
+              thickness: 2.5,
+              indent: 10,
+              endIndent: 10,
+            ),
             Expanded(
               child: FutureBuilder(
-                future: getUsersID(),
+                future: getAllProjs(),
                 builder: ((context, snapshot) {
-                  //print(_allUserID);
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
                   if (snapshot.connectionState == ConnectionState.done &&
                       _allUserID.isEmpty) {
                     return const Text(
                         'There are currently no business ideas...');
                   }
                   return ListView.builder(
-                    itemCount: _allUserID.length,
+                    itemCount: _allProjs.length,
                     itemBuilder: (context, index) {
-                      return FutureBuilder(
-                          future: getUserProj(_allUserID[index]),
-                          builder: ((context, snapshot) {
-                            return Column(
-                              children: [
-                                ListTile(
-                                  title: Text(_allUserID[index]),
-                                  onTap: () {
-                                    //Navigator.push(
-                                    //  context,
-                                    //  MaterialPageRoute(
-                                    //    builder: ((context) {
-                                    //      return ViewIdeiaPage(
-                                    //          docID: _allUserID[index]);
-                                    //    }),
-                                    //  ),
-                                    //);
-                                  },
-                                ),
-                                const Divider(
-                                  color: Colors.grey,
-                                  indent: 15,
-                                  endIndent: 15,
-                                )
-                              ],
-                            );
-                          }));
+                      return Column(
+                        children: [
+                          ListTile(
+                            leading: SizedBox(
+                              height: 50,
+                              width: 50,
+                              child: Image.asset(
+                                  'lib/images/light_bulb_icon_64.png'),
+                            ),
+                            title: Text(_allProjs[index]['title']),
+                            subtitle: Text(_allProjs[index]['type']),
+                            trailing: Text(
+                                'Project by:\n${_allProjs[index]['username']}'), // Limit number of username characters in register page
+                            onTap: () {},
+                          ),
+                          const Divider(
+                            color: Colors.grey,
+                            indent: 15,
+                            endIndent: 15,
+                          )
+                        ],
+                      );
                     },
                   );
                 }),
